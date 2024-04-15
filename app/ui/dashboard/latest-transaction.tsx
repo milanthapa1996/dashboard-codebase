@@ -3,22 +3,26 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
 import { LatestInvoice } from '@/app/lib/definitions';
-import { fetchLatestInvoices } from '@/app/lib/data';
-export default async function LatestInvoices() {
-  const latestInvoices = await fetchLatestInvoices();
+import { fetchLatestTransactions } from '@/app/lib/data';
+import { formatDateToLocal } from '@/app/lib/utils';
+import TransactionStatus from '@/app/ui/dashboard/status';
+
+
+export default async function LatestTransaction() {
+  const latestTransaction = await fetchLatestTransactions();
   return (
     <div className="flex w-full flex-col md:col-span-4">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Latest Invoices
+        Latest Transactions
       </h2>
       <div className="flex grow flex-col justify-between rounded-xl bg-slate-100 p-4">
         {/* NOTE: comment in this code when you get to this point in the course */}
 
         <div className="bg-white px-6">
-          {latestInvoices.map((invoice, i) => {
+          {latestTransaction.map((transaction, i) => {
             return (
               <div
-                key={invoice.id}
+                key={transaction.id}
                 className={clsx(
                   'flex flex-row items-center justify-between py-4',
                   {
@@ -28,25 +32,26 @@ export default async function LatestInvoices() {
               >
                 <div className="flex items-center">
                   <Image
-                    src={invoice.image_url}
-                    alt={`${invoice.name}'s profile picture`}
+                    src={transaction.image_url}
+                    alt={`${transaction.name}'s profile picture`}
                     className="mr-4 rounded-full"
                     width={32}
                     height={32}
                   />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
-                      {invoice.name}
+                      {transaction.name}
                     </p>
-                    <p className="hidden text-sm text-gray-500 sm:block">
-                      {invoice.email}
+                    <p className="hidden text-xs text-gray-500 sm:block">
+                      {formatDateToLocal(latestTransaction[0].date)}
                     </p>
                   </div>
+                  <TransactionStatus status={"expense"} />
                 </div>
                 <p
                   className={`${lusitana.className} truncate text-sm font-medium md:text-base`}
                 >
-                  {invoice.amount}
+                  {transaction.amount}
                 </p>
               </div>
             );

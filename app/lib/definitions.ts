@@ -36,6 +36,7 @@ export type LatestInvoice = {
   name: string;
   image_url: string;
   email: string;
+  date:string;
   amount: string;
 };
 
